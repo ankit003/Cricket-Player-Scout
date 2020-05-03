@@ -1,0 +1,20 @@
+#spring:
+# data:
+#   mongodb:
+##     authentication-database:
+#     username: ${MONGO_USER}
+#     password: ${MONGO_PASSWORD}
+#     database: ${MONGO_DATABASE}
+#     port: ${MONGO_PORT}
+#     host: ${MONGO_HOST}
+#server:
+# port: 9000
+
+spring:
+  data:
+    mongodb:
+      database: Cplayers
+      port: 27017
+      host: localhost
+server:
+  port: 9000

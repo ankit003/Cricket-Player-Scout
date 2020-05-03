@@ -1,0 +1,109 @@
+version: '2'
+services:
+  MongoDB:
+    image: mongo
+    build:
+      context: .
+      dockerfile: mongo.dockerfile
+    ports:
+      - 27017:27017
+    expose:
+      - 27017
+    network_mode: host
+
+  MySqlDB:
+    image: mysql:latest
+    restart: always
+    network_mode: host
+    environment:
+      - MYSQL_DATABASE=userdb
+      - MYSQL_HOST=localhost
+      - MYSQL_USER=root
+      - MYSQL_PASSWORD=root123
+      - MYSQL_ROOT_PASSWORD=root123
+    ports:
+      - 3306:3306
+    expose:
+      - 3306
+
+  EurekaServer:
+    image: eurekaserver
+    build: EurekaServer
+    network_mode: host
+    ports:
+      - 8761:8761
+    expose:
+      - 8761
+
+  RabbitMq:
+    image: rabbitmq:3-management
+    network_mode: host
+    ports:
+      - 5672:5672
+      - 15672:15672
+    expose:
+      - 5672
+      - 15672
+
+  Gateway:
+    image: gateway
+    build: Gateway
+    restart: always
+    network_mode: host
+    depends_on:
+      - EurekaServer
+    ports:
+      - 8765:8765
+    expose:
+      - 8765
+
+  FavouriteService:
+    image: favouriteservice
+    build: favouriteservice
+    restart: always
+    network_mode: host
+    depends_on:
+      - MongoDB
+      - EurekaServer
+      - RabbitMq
+    ports:
+      - 9000:9000
+    expose:
+      - 9000
+
+  PlayerRecommendationService:
+    image: playerrecommendationservice
+    build: playerrecommendationservice
+    restart: always
+    network_mode: host
+    depends_on:
+      - MongoDB
+      - EurekaServer
+      - RabbitMq
+    ports:
+      - 9001:9001
+    expose:
+      - 9001
+
+  UserService:
+    image: userservice
+    build: userservice
+    restart: always
+    network_mode: host
+    depends_on:
+      - EurekaServer
+      - MySqlDB
+    ports:
+      - 9002:9002
+    expose:
+      - 9002
+
+  CplayersUI:
+    image: cplayersui
+    build: CPlayersUI/
+    restart: always
+    network_mode: host
+    ports:
+      - 4200:4200
+    expose:
+      - 4200

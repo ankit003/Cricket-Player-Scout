@@ -1,0 +1,89 @@
+﻿<h1 align="center">Hi {{currentUser.firstName}}!</h1>
+<hr>
+<!-- <h3>All registered users:</h3>
+<ul>
+    <li *ngFor="let user of users">
+        {{user.username}} ({{user.firstName}} {{user.lastName}})
+        - <a (click)="deleteUser(user.id)" class="text-danger">Delete</a>
+    </li>
+</ul> -->
+
+
+
+<form [formGroup]="loginForm" (ngSubmit)="onSearch()">
+    <div class="form-group" align="center">
+        <label for="username">Enter player name to search</label>
+        <input type="text" formControlName="playername" class="form-control" />
+        <!-- <div *ngIf="submitted && f.username.errors" class="invalid-feedback">
+            <div *ngIf="f.username.errors.required">Player name is required</div>
+        </div> -->
+    </div>
+    <div mat-dialog-actions align="center">
+        <button class="btn btn-primary">Search</button>
+    </div>
+</form>
+
+<div mat-dialog-actions align="center" style="padding-top: 1%;">
+    <button class="btn btn-primary " (click)="viewFavourites()" style="margin: 1%; width: 250px;">View Favourites</button>
+    <button class="btn btn-primary " (click)="viewRecommendations()" style="margin: 1%; width: 250px;">View Recommendations</button>
+</div>
+
+<hr>
+
+<div *ngIf="displayPlayerList" class="playerlist-container">
+    <h3 align="center">Please select a single player</h3>
+    <mat-action-list style="max-height: 13.5em; overflow: auto;">
+        <button id="player-list-button" mat-list-item *ngFor="let player of players" (click)="onPlayerSelect(player['pid'])"
+            class="btn btn-dark btn-sm" style="margin-bottom: 5px;">
+            {{player.fullName}}
+        </button>
+    </mat-action-list>
+</div>
+
+<div *ngIf="displayFavouriteList" class="favouritelist-container">
+    <h3 align="center">Your Favourite Players</h3>
+    <mat-action-list style="max-height: 13.5em; overflow: auto;">
+        <button id="favourite-player-list-button" mat-list-item *ngFor="let favouritePlayer of favouritePlayers" (click)="onPlayerSelect(favouritePlayer['playerId'])"
+            class="btn btn-dark btn-sm" style="margin-bottom: 5px;">
+            {{favouritePlayer.playerName}}
+        </button>
+    </mat-action-list>
+</div>
+
+<div *ngIf="displayRecommendationList" class="recommendationlist-container">
+    <h3 align="center">Recommended Players</h3>
+    <mat-action-list style="max-height: 13.5em; overflow: auto;">
+        <button id="recommended-player-list-button" mat-list-item *ngFor="let recommendedPlayer of recommendedPlayers" (click)="onPlayerSelect(recommendedPlayer['playerId'])"
+            class="btn btn-dark btn-sm" style="margin-bottom: 5px;">
+            {{recommendedPlayer.playerName}}
+        </button>
+    </mat-action-list>
+</div>
+
+<br>
+
+<div *ngIf="displayPlayerStats" class="player-stat-container">
+<mat-card class="card card-dark" tabindex="1" style="background-color: lightgray;">
+    <mat-card-header>
+        <div mat-card-avatar class="example-header-image">
+            <img mat-card-image src="{{playerStats.imageURL}}" alt="No Image" style="width: 70px; height: 90px; padding: 5px;">
+        </div>
+        <mat-card-title><h3><b>{{playerStats.fullName}}</b></h3></mat-card-title>
+        <mat-card-subtitle><h3><b>{{playerStats.country}}</b></h3></mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+        <p><b>Profile</b> : {{playerStats.profile}}</p>
+        <p><b>Major Teams</b> : {{playerStats.majorTeams}}</p>
+        <p><b>Batting Style</b> : {{playerStats.battingStyle}}</p>
+        <p><b>Bowling Style</b> : {{playerStats.bowlingStyle}}</p>
+    </mat-card-content>
+    <mat-card-actions *ngIf="!displayFavouriteList">
+        <button mat-button class="btn btn-secondary btn-sm" (click)="addToFavourite()">Add to Favourite</button>
+        <h5 ></h5>
+    </mat-card-actions>
+    <mat-card-actions *ngIf="!displayRecommendationList && displayFavouriteList">
+        <button mat-button class="btn btn-secondary btn-sm" (click)="removeFavourite()">Remove from Favourite</button>
+        <h5 ></h5>
+    </mat-card-actions>
+</mat-card>
+</div>
